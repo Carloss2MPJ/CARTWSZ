@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Carrusel - Logo y producto personalizados</title>
+  <title>Carrusel - Logo visible (con respaldo)</title>
   <style>
     *{
       margin: 0;
@@ -17,7 +17,7 @@
       background: #000;
       font-family: Arial, Helvetica, sans-serif;
       overflow-x: hidden;
-      overflow-y: auto;  /* Scroll libre */
+      overflow-y: auto;
     }
 
     body {
@@ -28,7 +28,6 @@
       padding: 40px 0;
     }
 
-    /* Contenedor principal */
     .mi-carrusel-wrapper {
       width: 100%;
       max-width: 100vw;
@@ -41,7 +40,6 @@
       padding: 20px 0 40px;
     }
 
-    /* Logo - con tu imagen */
     .logo-container-mio {
       width: 100%;
       text-align: center;
@@ -50,14 +48,13 @@
     }
     .logo-container-mio img {
       display: inline-block;
-      height: 48px;        /* Ajusta la altura a tu gusto */
+      height: 48px;
       width: auto;
       max-width: 80vw;
       object-fit: contain;
-      border-radius: 12px; /* opcional, para un toque suave */
+      border-radius: 12px;
     }
 
-    /* Carrusel */
     .stage-mio {
       position: relative;
       width: 100vw;
@@ -91,7 +88,6 @@
       pointer-events: none;
     }
 
-    /* Botón WhatsApp */
     .boton-wa-mio {
       display: block !important;
       width: fit-content !important;
@@ -113,7 +109,6 @@
     }
     .boton-wa-mio:active { transform: scale(0.98); }
 
-    /* Redes sociales */
     .social-links {
       display: flex !important;
       justify-content: center !important;
@@ -140,7 +135,6 @@
       fill: white !important;
     }
 
-    /* Responsive */
     @media (max-width: 430px){
       body { padding: 20px 0; }
       .mi-carrusel-wrapper { gap: 24px; }
@@ -159,14 +153,15 @@
 </head>
 <body>
 <div class="mi-carrusel-wrapper">
-  <!-- Logo con tu imagen (ruta corregida) -->
+  <!-- LOGO: PRIMERO INTENTA CARGAR TU IMAGEN LOCAL, SI FALLA USA UN LOGO DE PRUEBA EXTERNO -->
   <div class="logo-container-mio">
-    <img src="images/WhatsApp%20Image%202026-05-21%20at%2015.40.16.jpeg" alt="Logo">
+    <img src="images/WhatsApp%20Image%202026-05-21%20at%2015.40.16.jpeg" 
+         alt="Logo" 
+         onerror="this.onerror=null; this.src='https://placehold.co/400x100/ffffff/000000?text=MI+LOGO';">
   </div>
 
   <section class="stage-mio">
     <div class="carousel-mio" id="carouselFinal">
-      <!-- Aquí van tus imágenes del producto (todas iguales o diferentes) -->
       <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
       <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
       <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
@@ -205,18 +200,11 @@
     let startX = 0;
     let dragDelta = 0;
 
-    // Diseño con altura reducida 15% (más horizontal)
     function getLayout(){
       const w = window.innerWidth;
-      if (w <= 360) {
-        return { centerW:264, centerH:380, sideW:212, sideH:343, sideY:8, x1:144, x2:268, scale1:0.86, scale2:0.80, rot1:24, rot2:33 };
-      }
-      if (w <= 390) {
-        return { centerW:278, centerH:392, sideW:220, sideH:352, sideY:8, x1:152, x2:282, scale1:0.87, scale2:0.81, rot1:23, rot2:32 };
-      }
-      if (w <= 430) {
-        return { centerW:292, centerH:404, sideW:228, sideH:360, sideY:8, x1:162, x2:298, scale1:0.88, scale2:0.82, rot1:22, rot2:31 };
-      }
+      if (w <= 360) return { centerW:264, centerH:380, sideW:212, sideH:343, sideY:8, x1:144, x2:268, scale1:0.86, scale2:0.80, rot1:24, rot2:33 };
+      if (w <= 390) return { centerW:278, centerH:392, sideW:220, sideH:352, sideY:8, x1:152, x2:282, scale1:0.87, scale2:0.81, rot1:23, rot2:32 };
+      if (w <= 430) return { centerW:292, centerH:404, sideW:228, sideH:360, sideY:8, x1:162, x2:298, scale1:0.88, scale2:0.82, rot1:22, rot2:31 };
       return { centerW:304, centerH:413, sideW:236, sideH:372, sideY:8, x1:170, x2:316, scale1:0.89, scale2:0.83, rot1:21, rot2:30 };
     }
 
@@ -228,19 +216,12 @@
         if (d > total/2) d -= total;
         let x=0, y=0, scale=1, rotateY=0, opacity=1, z=3;
         let w = l.centerW, h = l.centerH;
-        if (d === 0) {
-          x=0; y=0; scale=1; rotateY=0; z=5; w=l.centerW; h=l.centerH;
-        } else if (d === -1) {
-          x=-l.x1; y=l.sideY; scale=l.scale1; rotateY=l.rot1; z=3; w=l.sideW; h=l.sideH;
-        } else if (d === 1) {
-          x=l.x1; y=l.sideY; scale=l.scale1; rotateY=-l.rot1; z=3; w=l.sideW; h=l.sideH;
-        } else if (d === -2) {
-          x=-l.x2; y=l.sideY+4; scale=l.scale2; rotateY=l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95);
-        } else if (d === 2) {
-          x=l.x2; y=l.sideY+4; scale=l.scale2; rotateY=-l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95);
-        } else {
-          opacity=0; z=0; x=0; y=0; scale=0.7; rotateY=0;
-        }
+        if (d === 0) { x=0; y=0; scale=1; rotateY=0; z=5; w=l.centerW; h=l.centerH; }
+        else if (d === -1) { x=-l.x1; y=l.sideY; scale=l.scale1; rotateY=l.rot1; z=3; w=l.sideW; h=l.sideH; }
+        else if (d === 1) { x=l.x1; y=l.sideY; scale=l.scale1; rotateY=-l.rot1; z=3; w=l.sideW; h=l.sideH; }
+        else if (d === -2) { x=-l.x2; y=l.sideY+4; scale=l.scale2; rotateY=l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95); }
+        else if (d === 2) { x=l.x2; y=l.sideY+4; scale=l.scale2; rotateY=-l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95); }
+        else { opacity=0; z=0; x=0; y=0; scale=0.7; rotateY=0; }
         card.style.width = w + 'px';
         card.style.height = h + 'px';
         card.style.opacity = opacity;

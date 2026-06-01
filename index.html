@@ -95,67 +95,49 @@
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
 
-        /* CONTENEDOR DE PRODUCTOS (reemplaza el carrusel) */
+        /* CONTENEDOR DE IMÁGENES (siempre horizontal) */
         .products-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90vw;
-            max-width: 700px;
+            max-width: 650px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            padding: 0 16px;
+            gap: 16px;
+            flex-wrap: nowrap; /* Nunca apilar */
+            padding: 0 10px;
         }
 
-        /* CADA CARD DE PRODUCTO */
+        /* CADA IMAGEN */
         .product-card {
-            flex: 1 1 260px;
-            max-width: 320px;
-            min-width: 240px;
-            background: #fff;
+            flex: 1 1 auto;
+            max-width: 48%;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1);
+            background: #fff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
         }
         .product-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
         }
         .product-card:active {
             transform: scale(0.98);
         }
         .product-card img {
             width: 100%;
-            height: 220px;
+            height: auto;
+            aspect-ratio: 3/4; /* Relación de aspecto fija para todas las pantallas */
             object-fit: cover;
             display: block;
         }
-        .product-card .product-info {
-            padding: 16px 18px 20px;
-            text-align: center;
-            background: #fff;
-        }
-        .product-card .product-name {
-            font-size: 17px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 6px;
-        }
-        .product-card .product-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: #25D366;
-        }
 
-        /* REDES SOCIALES (sin botón WA) */
+        /* REDES SOCIALES */
         .social-bar {
             position: fixed;
             bottom: 0;
@@ -187,47 +169,32 @@
             fill: white;
         }
 
-        /* Ajustes responsive */
+        /* Ajustes responsive (siempre horizontal) */
         @media (max-width: 600px) {
             .products-container {
-                gap: 16px;
+                gap: 10px;
                 width: 95vw;
             }
             .product-card {
-                flex: 1 1 200px;
-                min-width: 160px;
                 max-width: 48%;
-            }
-            .product-card img {
-                height: 180px;
-            }
-            .product-card .product-name {
-                font-size: 15px;
-            }
-            .product-card .product-price {
-                font-size: 18px;
             }
         }
         @media (max-width: 500px) {
             #custom-logo { height: 133px; }
-            .products-container { gap: 12px; }
-            .product-card img { height: 150px; }
+            .products-container { gap: 8px; }
             .social-icon { width: 32px; height: 32px; }
             .social-bar { gap: 20px; }
         }
         @media (max-width: 400px) {
             #custom-logo { height: 118px; }
             .products-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 14px;
+                gap: 6px;
+                width: 98vw;
             }
             .product-card {
-                max-width: 280px;
-                width: 100%;
-                flex: none;
+                max-width: 48%;
+                border-radius: 16px;
             }
-            .product-card img { height: 200px; }
             .social-icon { width: 28px; height: 28px; }
             .social-bar { gap: 16px; }
         }
@@ -253,27 +220,17 @@
              onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; this.style.height='auto';">
     </div>
 
-    <!-- DOS CARDS DE PRODUCTO -->
+    <!-- DOS IMÁGENES HORIZONTALES (sin texto) -->
     <div class="products-container">
-        <!-- Producto 1 -->
         <div class="product-card" onclick="window.open('https://wa.me/573000000000?text=Quiero%20el%20Producto%201','_blank')">
             <img src="images/descarga%20%281%29.png" alt="Producto 1" onerror="this.src='https://picsum.photos/id/20/400/500'">
-            <div class="product-info">
-                <div class="product-name">Producto Premium 1</div>
-                <div class="product-price">$49.99</div>
-            </div>
         </div>
-        <!-- Producto 2 -->
         <div class="product-card" onclick="window.open('https://wa.me/573000000000?text=Quiero%20el%20Producto%202','_blank')">
             <img src="images/descarga%20%281%29.png" alt="Producto 2" onerror="this.src='https://picsum.photos/id/21/400/500'">
-            <div class="product-info">
-                <div class="product-name">Producto Premium 2</div>
-                <div class="product-price">$59.99</div>
-            </div>
         </div>
     </div>
 
-    <!-- REDES SOCIALES (sin botón WhatsApp) -->
+    <!-- REDES SOCIALES -->
     <div class="social-bar">
         <a href="https://www.facebook.com/profile.php?id=61590498631605" target="_blank" class="social-icon">
             <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>

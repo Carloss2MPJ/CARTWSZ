@@ -1,276 +1,447 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Carrusel 3D - Funcional</title>
-  <style>
-    /* RESET ABSOLUTO */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Descubre la nueva colección. Compra directa por WhatsApp y síguenos en redes.">
+    <title>Tu Marca | Link in Bio</title>
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      background: #000;
-    }
+    <!-- Open Graph / Social (profesional como JLO) -->
+    <meta property="og:locale" content="es_LA">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tu Marca">
+    <meta property="og:description" content="Explora lo último. Contáctanos por WhatsApp.">
+    <meta property="og:url" content="https://tudominio.com/">
+    <meta property="og:image" content="https://tudominio.com/images/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tu Marca">
+    <meta name="twitter:description" content="Explora lo último. Contáctanos por WhatsApp.">
+    <meta name="twitter:image" content="https://tudominio.com/images/og-image.jpg">
 
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;  /* Nada de espacio arriba */
-      overflow-y: auto;
-    }
+    <!-- Favicon (puedes usar tu propio ícono) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
 
-    /* Contenedor principal: sin márgenes */
-    .mi-carrusel-wrapper {
-      width: 100%;
-      max-width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      background: #000;
-    }
+    <style>
+        /* RESET y base estilo JLO */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            position: fixed;
+            top: 0; bottom: 0; left: 0; right: 0;
+            background: black;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    /* LOGO - Tamaño normal, sin espacios alrededor */
-    .logo-container-mio {
-      width: 100%;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      line-height: 0;
-    }
-    .logo-container-mio img {
-      display: block;
-      margin: 0 auto;
-      height: 60px;       /* Tamaño visible pero no exagerado */
-      width: auto;
-      max-width: 85vw;
-      object-fit: contain;
-    }
+        /* PANTALLA DE CARGA (igual que JLO) */
+        #loading-screen {
+            position: relative;
+            background-color: black;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+        #loading-screen .loading-icon-and-percentage {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+        }
+        #loading-screen #loading-percentage {
+            margin-top: 40px;
+            font-size: 50px;
+            font-weight: bold;
+            line-height: 1;
+            color: #66cddd;
+        }
+        .loader {
+            position: absolute;
+            top: -10px;
+            width: 120px;
+            animation: wave 1.7s ease-out infinite;
+        }
+        .loader:before {
+            content: "";
+            display: block;
+            padding-top: 100%;
+        }
+        .circular {
+            height: 100%;
+            transform-origin: center center;
+            width: 100%;
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            margin: auto;
+        }
+        .border {
+            stroke-dasharray: 200 200;
+            stroke: rgba(255,255,255,0.3);
+            animation: stroke 1.7s ease-out infinite;
+        }
+        @keyframes wave {
+            60% { opacity: 1; }
+            100% { transform: scale(2.3); opacity: 0; }
+        }
+        @keyframes stroke {
+            60% { stroke-width: 0.5; stroke: rgba(255,255,255,0.7); }
+            90% { stroke-width: 0.1; stroke: rgba(255,255,255,1); }
+        }
+        @media only screen and (max-width: 896px) and (max-height: 414px) and (orientation: landscape),
+               only screen and (max-width: 414px) and (max-height: 896px) and (orientation: portrait) {
+            #loading-screen { margin-top: 20px; font-size: 24px; }
+            #loading-screen .loader { max-width: 80px; top: -8px; }
+        }
 
-    /* CARRUSEL 3D - con perspectiva y preserve-3d */
-    .stage-mio {
-      position: relative;
-      width: 100vw;
-      height: 52vh;       /* Altura flexible pero proporcionada */
-      min-height: 340px;
-      max-height: 440px;
-      overflow: hidden;
-      perspective: 1200px;
-      margin: 12px 0;
-    }
-    .carousel-mio {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-    }
-    .card-mio {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-style: preserve-3d;
-      border-radius: 24px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1), width 0.4s, height 0.4s;
-      will-change: transform;
-    }
-    .card-mio img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      pointer-events: none;
-    }
+        /* CAPA PRINCIPAL OCULTA HASTA QUE CARGUE */
+        #app-root {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
 
-    /* BOTÓN WHATSAPP */
-    .boton-wa-mio {
-      display: block;
-      width: fit-content;
-      max-width: 90vw;
-      min-width: 200px;
-      height: 48px;
-      padding: 0 24px;
-      border-radius: 60px;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      text-align: center;
-      line-height: 48px;
-      margin: 8px auto 6px auto;
-      border: none;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transition: transform 0.1s;
-    }
-    .boton-wa-mio:active {
-      transform: scale(0.97);
-    }
+        /* CONTENEDORES FIJOS (estilo JLO) */
+        .fixed-control-wrapper {
+            position: fixed;
+            z-index: 100;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .fixed-control-wrapper.is-left {
+            top: 0;
+            left: 0;
+        }
+        .fixed-control-wrapper.is-right {
+            top: 0;
+            right: 0;
+        }
+        .fixed-control-button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .fixed-control-button:hover { opacity: 1; }
 
-    /* REDES SOCIALES */
-    .social-links {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 28px;
-      margin: 4px 0 15px 0;
-    }
-    .social-icon {
-      display: inline-block;
-      width: 38px;
-      height: 38px;
-      transition: transform 0.2s;
-      opacity: 0.9;
-    }
-    .social-icon:hover {
-      transform: scale(1.08);
-      opacity: 1;
-    }
-    .social-icon svg {
-      width: 100%;
-      height: 100%;
-      fill: white;
-    }
+        /* LOGO (top-left) */
+        #custom-logo {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
 
-    /* Responsive para que quepa en pantallas pequeñas */
-    @media (max-width: 500px) {
-      .logo-container-mio img { height: 50px; }
-      .stage-mio { height: 48vh; min-height: 300px; margin: 8px 0; }
-      .boton-wa-mio { height: 44px; line-height: 44px; font-size: 14px; min-width: 180px; }
-      .social-links { gap: 22px; }
-      .social-icon { width: 34px; height: 34px; }
-    }
-    @media (max-width: 400px) {
-      .stage-mio { height: 46vh; min-height: 280px; }
-      .social-links { gap: 18px; }
-      .social-icon { width: 32px; height: 32px; }
-    }
-  </style>
+        /* BOTONES SUPERIORES DERECHA (por estética) */
+        .fullscreen-button {
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 6px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ÁREA PRINCIPAL DEL CARRUSEL */
+        .stage-mio {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 60vh;
+            max-height: 600px;
+            min-height: 350px;
+            perspective: 1200px;
+        }
+        .carousel-mio {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+        .card-mio {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-style: preserve-3d;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), width 0.4s, height 0.4s;
+            will-change: transform;
+        }
+        .card-mio img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        /* BARRA INFERIOR (WhatsApp + redes) */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 20px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            z-index: 50;
+            pointer-events: none;
+        }
+        .bottom-bar > * {
+            pointer-events: auto;
+        }
+        .boton-wa-mio {
+            display: inline-block;
+            width: fit-content;
+            min-width: 200px;
+            height: 48px;
+            padding: 0 24px;
+            border-radius: 60px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 48px;
+            box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+            transition: transform 0.15s, box-shadow 0.2s;
+        }
+        .boton-wa-mio:active {
+            transform: scale(0.96);
+            box-shadow: 0 3px 10px rgba(37,211,102,0.6);
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+        }
+        .social-icon {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            transition: transform 0.2s;
+            opacity: 0.85;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .social-icon:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        .social-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+        }
+
+        /* Ajustes responsive */
+        @media (max-width: 500px) {
+            #custom-logo { height: 30px; }
+            .stage-mio { height: 55vh; min-height: 300px; }
+            .boton-wa-mio { height: 44px; line-height: 44px; font-size: 14px; min-width: 180px; }
+            .social-links { gap: 20px; }
+            .social-icon { width: 32px; height: 32px; }
+        }
+        @media (max-width: 400px) {
+            .stage-mio { height: 50vh; min-height: 280px; }
+            .social-links { gap: 16px; }
+            .social-icon { width: 28px; height: 28px; }
+        }
+    </style>
 </head>
 <body>
-<div class="mi-carrusel-wrapper">
-  <!-- LOGO: usa tu ruta, pero si falla, muestra un logo de respaldo bonito -->
-  <div class="logo-container-mio">
-    <img src="images/WhatsApp%20Image%202026-05-21%20at%2015.40.16.jpeg" 
-         alt="Logo"
-         onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; this.style.height='auto';">
-  </div>
 
-  <!-- CARRUSEL 3D -->
-  <section class="stage-mio">
-    <div class="carousel-mio" id="carouselFinal">
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+<!-- PANTALLA DE CARGA (idéntica a JLO) -->
+<div id="loading-screen">
+    <div class="loading-icon-and-percentage">
+        <!-- Ícono de esfera de JLO como placeholder, puedes cambiarlo -->
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNTAuMTkzQy4wOTUgNzcuNzUxIDIyLjYwMSAxMDAuMDk0IDUwLjE3IDEwMGMyNy41Ny0uMDk0IDQ5LjkyNC0yMi41OSA0OS44My01MC4xNDlDOTkuOTA0IDIyLjI2OCA3Ny4zOTYtLjA5NSA0OS44MjYgMCAyMi4yNTcuMDk0LS4wOTMgMjIuNjExIDAgNTAuMTkzek00OS44NDUgNC43MjRjLTUuMjk0LjAxOS0xMC4zMjggMS4wMTctMTQuMTc1IDIuODEtMy42NzUgMS43MTQtNS43NzggMy45ODQtNS43NyA2LjIzLjAwNyAyLjI0MSAyLjEyNiA0LjQ5MyA1LjgxMiA2LjE3NyAzLjg1OCAxLjc2NCA4LjkgMi43MjUgMTQuMTk0IDIuNzA3IDUuMjk1LS4wMTkgMTAuMzMtMS4wMTQgMTQuMTc5LTIuODA0IDMuNjc3LTEuNzEgNS43ODItMy45NzYgNS43NzQtNi4yMTgtLjAwNy0yLjI0NS0yLjEyOC00LjUtNS44MTctNi4xOS0zLjg2MS0xLjc2Ni04LjkwMy0yLjczLTE0LjE5Ny0yLjcxMnptLTI0LjY2IDguMjM1YTQ1LjE1IDQ1LjE1IDAgMCAwLTE0LjExMiAxNS4yNzggNDQuNTQ1IDQ0LjU0NSAwIDAgMC01LjY5MiAyMS45NGMuMDg0IDI0LjU5NyAyMC4xNjggNDQuNTQgNDQuNzcgNDQuNDU1IDI0LjYwNC0uMDg0IDQ0LjU1Mi0yMC4xNjMgNDQuNDY5LTQ0Ljc2YTQ0LjU0MSA0NC41NDEgMCAwIDAtNS44NC0yMS44OTlBNDUuMSA0NS4xIDAgMCAwIDc0LjU3IDEyLjgwMWMuMDgxLjQzLjEyMy44NTYuMTI0IDEuMjczLjAyNiA3LjI4Ni0xMC44NTYgMTMuMDMtMjQuNzczIDEzLjA3OC0xMy45MS4wNDgtMjQuODI2LTUuNjIyLTI0Ljg1LTEyLjkwOGE3LjA3IDcuMDcgMCAwIDEgLjExNi0xLjI4NXoiIGZpbGw9IiNGRkZGRkYiLz4KPC9zdmc+Cg==" 
+             id="sphere-loading-logo" alt="Cargando">
+        <div class="loader">
+            <svg class="circular" viewbox="25 25 50 50">
+                <circle class="border" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+        <div id="loading-percentage">0%</div>
     </div>
-  </section>
+</div>
 
-  <!-- BOTÓN WHATSAPP -->
-  <a class="boton-wa-mio" href="https://wa.me/573000000000?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener noreferrer">
-    Escribir por WhatsApp
-  </a>
+<!-- APP PRINCIPAL (oculta hasta que termine la carga) -->
+<div id="app-root">
+    <!-- Controles fijos izquierda: LOGO -->
+    <div class="fixed-control-wrapper is-left">
+        <img id="custom-logo" 
+             src="images/WhatsApp%20Image%202026-05-21%20at%2015.40.16.jpeg" 
+             alt="Logo"
+             onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+    </div>
 
-  <!-- REDES SOCIALES -->
-  <div class="social-links">
-    <a href="https://www.facebook.com/profile.php?id=61590498631605" target="_blank" class="social-icon">
-      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    </a>
-    <a href="https://www.instagram.com/cartwszz/" target="_blank" class="social-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-    </a>
-    <a href="https://www.tiktok.com/@cartwszzy?lang=es-419" target="_blank" class="social-icon">
-      <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.58a6.34 6.34 0 0 0 10.86 4.7 6.33 6.33 0 0 0 1.81-4.5v-7a8.2 8.2 0 0 0 4.83 1.48V9.4a5.14 5.14 0 0 1-2.91-2.71z"/></svg>
-    </a>
-    <a href="https://www.youtube.com/@Cartwsz" target="_blank" class="social-icon">
-      <svg viewBox="0 0 24 24"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.505 2.505 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.846.922 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.846-.23 1.538-.922 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15V9l5 3-5 3z"/></svg>
-    </a>
-  </div>
+    <!-- Controles fijos derecha (solo estético, botón de pantalla completa) -->
+    <div class="fixed-control-wrapper is-right">
+        <div class="fullscreen-button" id="fullscreen-toggle" title="Pantalla completa">
+            <svg width="22" height="22" viewBox="0 0 30 30" fill="white">
+                <path d="M25.2 15.2H1.2l4.9 4.9a.7.7 0 0 1-1 .5L.1 15.1 5.6 9.1a.7.7 0 0 1 .5 1L1.2 14.5h24l-4.9-4.9a.7.7 0 0 1 .5-1l5.5 5.5c.1.1.1.3.1.4 0 .1 0 .2-.1.3l-5.5 5.5a.7.7 0 0 1-.5-1l4.9-4.9z" transform="rotate(-45 15 14.88)"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- CARRUSEL 3D (reemplaza el canvas de JLO) -->
+    <div class="stage-mio">
+        <div class="carousel-mio" id="carouselFinal">
+            <!-- Las imágenes se mantienen de tu código original -->
+            <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+            <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+            <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+            <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+            <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/500'"></article>
+        </div>
+    </div>
+
+    <!-- BARRA INFERIOR: WhatsApp + Redes Sociales -->
+    <div class="bottom-bar">
+        <a class="boton-wa-mio" href="https://wa.me/573000000000?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener noreferrer">
+            💬 Escribir por WhatsApp
+        </a>
+        <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61590498631605" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/cartwszz/" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@cartwszzy?lang=es-419" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.58a6.34 6.34 0 0 0 10.86 4.7 6.33 6.33 0 0 0 1.81-4.5v-7a8.2 8.2 0 0 0 4.83 1.48V9.4a5.14 5.14 0 0 1-2.91-2.71z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@Cartwsz" target="_blank" class="social-icon">
+                <svg viewBox="0 0 24 24"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.505 2.505 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.846.922 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.846-.23 1.538-.922 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15V9l5 3-5 3z"/></svg>
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>
-  (function(){
-    const cards = Array.from(document.querySelectorAll('.card-mio'));
-    const total = cards.length;
-    const carousel = document.getElementById('carouselFinal');
-    let activeIndex = 0;
-    let isDragging = false;
-    let startX = 0;
-    let dragDelta = 0;
+    (function() {
+        // ---------- SIMULACIÓN DE CARGA ----------
+        const loadingScreen = document.getElementById('loading-screen');
+        const percentageEl = document.getElementById('loading-percentage');
+        const appRoot = document.getElementById('app-root');
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 6) + 1;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                // Ocultar pantalla de carga y mostrar app
+                loadingScreen.style.display = 'none';
+                appRoot.style.display = 'block';
+                // Iniciar carrusel
+                initCarousel();
+            }
+            percentageEl.textContent = progress + '%';
+        }, 80);
 
-    function getLayout() {
-      const w = window.innerWidth;
-      if (w <= 360) return { cW: 220, cH: 320, sW: 175, sH: 280, offY: 6, x1: 118, x2: 215, scl1: 0.85, scl2: 0.79, rot1: 23, rot2: 32 };
-      if (w <= 390) return { cW: 232, cH: 338, sW: 185, sH: 295, offY: 6, x1: 125, x2: 228, scl1: 0.86, scl2: 0.80, rot1: 22, rot2: 31 };
-      if (w <= 430) return { cW: 248, cH: 354, sW: 198, sH: 310, offY: 6, x1: 134, x2: 242, scl1: 0.87, scl2: 0.81, rot1: 21, rot2: 30 };
-      return { cW: 264, cH: 370, sW: 210, sH: 324, offY: 6, x1: 142, x2: 256, scl1: 0.88, scl2: 0.82, rot1: 20, rot2: 29 };
-    }
+        // ---------- CARRUSEL 3D (tu código mejorado) ----------
+        function initCarousel() {
+            const cards = Array.from(document.querySelectorAll('.card-mio'));
+            const total = cards.length;
+            const carousel = document.getElementById('carouselFinal');
+            let activeIndex = 0;
+            let isDragging = false;
+            let startX = 0;
+            let dragDelta = 0;
 
-    function applyLayout() {
-      const l = getLayout();
-      cards.forEach((card, i) => {
-        let diff = i - activeIndex;
-        let d = ((diff % total) + total) % total;
-        if (d > total/2) d -= total;
-        let x=0, y=0, scale=1, ry=0, opacity=1, z=3, w=l.cW, h=l.cH;
-        if (d === 0) {
-          x=0; y=0; scale=1; ry=0; z=5; w=l.cW; h=l.cH;
-        } else if (d === -1) {
-          x = -l.x1; y = l.offY; scale = l.scl1; ry = l.rot1; z = 3; w = l.sW; h = l.sH;
-        } else if (d === 1) {
-          x = l.x1; y = l.offY; scale = l.scl1; ry = -l.rot1; z = 3; w = l.sW; h = l.sH;
-        } else if (d === -2) {
-          x = -l.x2; y = l.offY + 4; scale = l.scl2; ry = l.rot2; z = 1; w = Math.round(l.sW * 0.94); h = Math.round(l.sH * 0.94);
-        } else if (d === 2) {
-          x = l.x2; y = l.offY + 4; scale = l.scl2; ry = -l.rot2; z = 1; w = Math.round(l.sW * 0.94); h = Math.round(l.sH * 0.94);
-        } else {
-          opacity = 0; z = 0; scale = 0.7;
+            function getLayout() {
+                const w = window.innerWidth;
+                if (w <= 360) return { cW: 220, cH: 320, sW: 175, sH: 280, offY: 6, x1: 118, x2: 215, scl1: 0.85, scl2: 0.79, rot1: 23, rot2: 32 };
+                if (w <= 390) return { cW: 232, cH: 338, sW: 185, sH: 295, offY: 6, x1: 125, x2: 228, scl1: 0.86, scl2: 0.80, rot1: 22, rot2: 31 };
+                if (w <= 430) return { cW: 248, cH: 354, sW: 198, sH: 310, offY: 6, x1: 134, x2: 242, scl1: 0.87, scl2: 0.81, rot1: 21, rot2: 30 };
+                return { cW: 264, cH: 370, sW: 210, sH: 324, offY: 6, x1: 142, x2: 256, scl1: 0.88, scl2: 0.82, rot1: 20, rot2: 29 };
+            }
+
+            function applyLayout() {
+                const l = getLayout();
+                cards.forEach((card, i) => {
+                    let diff = i - activeIndex;
+                    let d = ((diff % total) + total) % total;
+                    if (d > total/2) d -= total;
+                    let x=0, y=0, scale=1, ry=0, opacity=1, z=3, w=l.cW, h=l.cH;
+                    if (d === 0) {
+                        x=0; y=0; scale=1; ry=0; z=5; w=l.cW; h=l.cH;
+                    } else if (d === -1) {
+                        x = -l.x1; y = l.offY; scale = l.scl1; ry = l.rot1; z = 3; w = l.sW; h = l.sH;
+                    } else if (d === 1) {
+                        x = l.x1; y = l.offY; scale = l.scl1; ry = -l.rot1; z = 3; w = l.sW; h = l.sH;
+                    } else if (d === -2) {
+                        x = -l.x2; y = l.offY + 4; scale = l.scl2; ry = l.rot2; z = 1; w = Math.round(l.sW * 0.94); h = Math.round(l.sH * 0.94);
+                    } else if (d === 2) {
+                        x = l.x2; y = l.offY + 4; scale = l.scl2; ry = -l.rot2; z = 1; w = Math.round(l.sW * 0.94); h = Math.round(l.sH * 0.94);
+                    } else {
+                        opacity = 0; z = 0; scale = 0.7;
+                    }
+                    card.style.width = w + 'px';
+                    card.style.height = h + 'px';
+                    card.style.opacity = opacity;
+                    card.style.zIndex = z;
+                    card.style.transform = `translate(-50%, -50%) translateX(${x}px) translateY(${y}px) rotateY(${ry}deg) scale(${scale})`;
+                });
+            }
+
+            function next() { activeIndex = (activeIndex+1)%total; applyLayout(); }
+            function prev() { activeIndex = (activeIndex-1+total)%total; applyLayout(); }
+
+            carousel.addEventListener('pointerdown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                dragDelta = 0;
+                carousel.setPointerCapture?.(e.pointerId);
+            });
+            carousel.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                dragDelta = e.clientX - startX;
+            });
+            carousel.addEventListener('pointerup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                if (Math.abs(dragDelta) > 40) {
+                    dragDelta < 0 ? next() : prev();
+                } else {
+                    applyLayout();
+                }
+            });
+            carousel.addEventListener('pointercancel', () => { isDragging = false; applyLayout(); });
+            carousel.addEventListener('pointerleave', () => { isDragging = false; applyLayout(); });
+            window.addEventListener('resize', applyLayout);
+            applyLayout();
         }
-        card.style.width = w + 'px';
-        card.style.height = h + 'px';
-        card.style.opacity = opacity;
-        card.style.zIndex = z;
-        card.style.transform = `translate(-50%, -50%) translateX(${x}px) translateY(${y}px) rotateY(${ry}deg) scale(${scale})`;
-      });
-    }
 
-    function next() { activeIndex = (activeIndex+1)%total; applyLayout(); }
-    function prev() { activeIndex = (activeIndex-1+total)%total; applyLayout(); }
-
-    carousel.addEventListener('pointerdown', (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      dragDelta = 0;
-      carousel.setPointerCapture?.(e.pointerId);
-    });
-    carousel.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      dragDelta = e.clientX - startX;
-    });
-    carousel.addEventListener('pointerup', () => {
-      if (!isDragging) return;
-      isDragging = false;
-      if (Math.abs(dragDelta) > 40) {
-        dragDelta < 0 ? next() : prev();
-      } else {
-        applyLayout();
-      }
-    });
-    carousel.addEventListener('pointercancel', () => { isDragging = false; applyLayout(); });
-    carousel.addEventListener('pointerleave', () => { isDragging = false; applyLayout(); });
-    window.addEventListener('resize', applyLayout);
-    applyLayout();
-  })();
+        // ---------- BOTÓN PANTALLA COMPLETA (toque extra profesional) ----------
+        document.getElementById('fullscreen-toggle').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    })();
 </script>
+
 </body>
 </html>

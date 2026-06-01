@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Carrusel + Redes Sociales - Una sola imagen</title>
+  <title>Carrusel con tu imagen - Corregido</title>
   <style>
-    /* Reset total para evitar interferencias de Elementor/WordPress */
     *{
       margin: 0 !important;
       padding: 0 !important;
@@ -13,7 +12,13 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Contenedor principal */
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #000;
+      overflow-x: hidden;
+    }
+
     .mi-carrusel-wrapper {
       width: 100vw;
       min-height: 100vh;
@@ -24,19 +29,12 @@
       justify-content: center;
       overflow-x: hidden;
       overflow-y: auto;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-left: 0 !important;
-      margin-right: 0 !important;
     }
 
-    /* Logo */
     .logo-container-mio {
       width: 100%;
       text-align: center;
       margin-bottom: 45px !important;
-      flex-shrink: 0;
     }
     .logo-container-mio img {
       display: inline-block;
@@ -46,12 +44,10 @@
       object-fit: contain;
     }
 
-    /* Carrusel */
     .stage-mio {
       position: relative;
       width: 100vw;
       height: min(68vh, 520px);
-      flex-shrink: 0;
       overflow: hidden;
       perspective: 1600px;
       touch-action: none;
@@ -72,7 +68,6 @@
       background: #fff;
       box-shadow: 0 22px 60px rgba(0,0,0,.42);
       transition: transform 0.45s cubic-bezier(.22,.8,.18,1), width 0.45s cubic-bezier(.22,.8,.18,1), height 0.45s cubic-bezier(.22,.8,.18,1), opacity 0.25s ease;
-      will-change: transform, width, height, opacity;
     }
     .card-mio img {
       width: 100%;
@@ -82,7 +77,6 @@
       pointer-events: none;
     }
 
-    /* Botón WhatsApp - Centrado */
     .boton-wa-mio {
       display: block !important;
       width: fit-content !important;
@@ -96,19 +90,14 @@
       text-decoration: none !important;
       font-size: 14px !important;
       font-weight: 700 !important;
-      letter-spacing: 0.02em;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 28px rgba(0,0,0,.28);
-      margin: 45px auto 0 auto !important;
       text-align: center;
       line-height: 52px;
-      flex-shrink: 0;
+      margin: 45px auto 0 auto !important;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 28px rgba(0,0,0,.28);
     }
-    .boton-wa-mio:active {
-      transform: scale(0.98);
-    }
+    .boton-wa-mio:active { transform: scale(0.98); }
 
-    /* Contenedor de redes sociales */
     .social-links {
       display: flex !important;
       justify-content: center !important;
@@ -119,8 +108,6 @@
       flex-wrap: wrap !important;
       width: 100% !important;
     }
-
-    /* Estilo de cada ícono: sólido, sin bordes raros, como en el ejemplo */
     .social-icon {
       display: inline-block !important;
       width: 36px !important;
@@ -138,7 +125,6 @@
       fill: white !important;
     }
 
-    /* Responsive */
     @media (max-width: 430px){
       .logo-container-mio img { height: 30px; }
       .stage-mio { height: min(66vh, 500px); }
@@ -156,26 +142,21 @@
     }
   </style>
 </head>
-<body style="margin:0; padding:0; background:#000; overflow-x:hidden;">
+<body>
 <div class="mi-carrusel-wrapper">
   <div class="logo-container-mio">
-    <!-- Reemplaza con la ruta real de tu LOGO -->
+    <!-- CAMBIA ESTO POR LA RUTA DE TU LOGO -->
     <img src="logo.png" alt="Logo">
   </div>
 
-  <section class="stage-mio" aria-label="Carrusel">
+  <section class="stage-mio">
     <div class="carousel-mio" id="carouselFinal">
-      <!-- AQUÍ ESTÁN TODAS LAS IMÁGENES REEMPLAZADAS POR LA TUYA -->
-      <!-- Intenta primero con la ruta codificada (recomendada) -->
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi imagen de producto"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi imagen de producto"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi imagen de producto"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi imagen de producto"></article>
-      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi imagen de producto"></article>
-      
-      <!-- === SI LA ANTERIOR NO FUNCIONA, DESCOMENTA ESTA LÍNEA Y COMENTA LAS DE ARRIBA === -->
-      <!-- Usa una URL externa de prueba para verificar que el carrusel sí funciona -->
-      <!-- <article class="card-mio"><img src="https://picsum.photos/id/104/400/600" alt="Prueba"></article> -->
+      <!-- CARTAS CON TU IMAGEN (ruta CORREGIDA con codificación de espacios y paréntesis) -->
+      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/600';"></article>
+      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/600';"></article>
+      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/600';"></article>
+      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/600';"></article>
+      <article class="card-mio"><img src="images/descarga%20%281%29.png" alt="Mi producto" onerror="this.onerror=null; this.src='https://picsum.photos/id/20/400/600';"></article>
     </div>
   </section>
 
@@ -183,34 +164,18 @@
     Escribir por WhatsApp
   </a>
 
-  <!-- Íconos de redes sociales con estilo SÓLIDO -->
   <div class="social-links">
-    <!-- Facebook -->
-    <a href="https://www.facebook.com/profile.php?id=61590498631605" target="_blank" rel="noopener noreferrer" class="social-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-      </svg>
+    <a href="https://www.facebook.com/profile.php?id=61590498631605" target="_blank" class="social-icon">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
     </a>
-
-    <!-- Instagram -->
-    <a href="https://www.instagram.com/cartwszz/" target="_blank" rel="noopener noreferrer" class="social-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-      </svg>
+    <a href="https://www.instagram.com/cartwszz/" target="_blank" class="social-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
     </a>
-
-    <!-- TikTok -->
-    <a href="https://www.tiktok.com/@cartwszzy?lang=es-419" target="_blank" rel="noopener noreferrer" class="social-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.58a6.34 6.34 0 0 0 10.86 4.7 6.33 6.33 0 0 0 1.81-4.5v-7a8.2 8.2 0 0 0 4.83 1.48V9.4a5.14 5.14 0 0 1-2.91-2.71z"/>
-      </svg>
+    <a href="https://www.tiktok.com/@cartwszzy?lang=es-419" target="_blank" class="social-icon">
+      <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.58a6.34 6.34 0 0 0 10.86 4.7 6.33 6.33 0 0 0 1.81-4.5v-7a8.2 8.2 0 0 0 4.83 1.48V9.4a5.14 5.14 0 0 1-2.91-2.71z"/></svg>
     </a>
-
-    <!-- YouTube -->
-    <a href="https://www.youtube.com/@Cartwsz" target="_blank" rel="noopener noreferrer" class="social-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.505 2.505 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.846.922 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.846-.23 1.538-.922 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15V9l5 3-5 3z"/>
-      </svg>
+    <a href="https://www.youtube.com/@Cartwsz" target="_blank" class="social-icon">
+      <svg viewBox="0 0 24 24"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.505 2.505 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.846.922 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.846-.23 1.538-.922 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15V9l5 3-5 3z"/></svg>
     </a>
   </div>
 </div>
@@ -220,7 +185,6 @@
     const cards = Array.from(document.querySelectorAll('.card-mio'));
     const total = cards.length;
     const carousel = document.getElementById('carouselFinal');
-
     let activeIndex = 0;
     let isDragging = false;
     let startX = 0;
@@ -228,15 +192,9 @@
 
     function getLayout(){
       const w = window.innerWidth;
-      if (w <= 360) {
-        return { centerW:264, centerH:448, sideW:212, sideH:404, sideY:10, x1:144, x2:268, scale1:0.86, scale2:0.80, rot1:24, rot2:33 };
-      }
-      if (w <= 390) {
-        return { centerW:278, centerH:462, sideW:220, sideH:414, sideY:10, x1:152, x2:282, scale1:0.87, scale2:0.81, rot1:23, rot2:32 };
-      }
-      if (w <= 430) {
-        return { centerW:292, centerH:476, sideW:228, sideH:424, sideY:10, x1:162, x2:298, scale1:0.88, scale2:0.82, rot1:22, rot2:31 };
-      }
+      if (w <= 360) return { centerW:264, centerH:448, sideW:212, sideH:404, sideY:10, x1:144, x2:268, scale1:0.86, scale2:0.80, rot1:24, rot2:33 };
+      if (w <= 390) return { centerW:278, centerH:462, sideW:220, sideH:414, sideY:10, x1:152, x2:282, scale1:0.87, scale2:0.81, rot1:23, rot2:32 };
+      if (w <= 430) return { centerW:292, centerH:476, sideW:228, sideH:424, sideY:10, x1:162, x2:298, scale1:0.88, scale2:0.82, rot1:22, rot2:31 };
       return { centerW:304, centerH:486, sideW:236, sideH:438, sideY:10, x1:170, x2:316, scale1:0.89, scale2:0.83, rot1:21, rot2:30 };
     }
 
@@ -248,19 +206,12 @@
         if (d > total/2) d -= total;
         let x=0, y=0, scale=1, rotateY=0, opacity=1, z=3;
         let w = l.centerW, h = l.centerH;
-        if (d === 0) {
-          x=0; y=0; scale=1; rotateY=0; z=5; w=l.centerW; h=l.centerH;
-        } else if (d === -1) {
-          x=-l.x1; y=l.sideY; scale=l.scale1; rotateY=l.rot1; z=3; w=l.sideW; h=l.sideH;
-        } else if (d === 1) {
-          x=l.x1; y=l.sideY; scale=l.scale1; rotateY=-l.rot1; z=3; w=l.sideW; h=l.sideH;
-        } else if (d === -2) {
-          x=-l.x2; y=l.sideY+4; scale=l.scale2; rotateY=l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95);
-        } else if (d === 2) {
-          x=l.x2; y=l.sideY+4; scale=l.scale2; rotateY=-l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95);
-        } else {
-          opacity=0; z=0; x=0; y=0; scale=0.7; rotateY=0;
-        }
+        if (d === 0) { x=0; y=0; scale=1; rotateY=0; z=5; w=l.centerW; h=l.centerH; }
+        else if (d === -1) { x=-l.x1; y=l.sideY; scale=l.scale1; rotateY=l.rot1; z=3; w=l.sideW; h=l.sideH; }
+        else if (d === 1) { x=l.x1; y=l.sideY; scale=l.scale1; rotateY=-l.rot1; z=3; w=l.sideW; h=l.sideH; }
+        else if (d === -2) { x=-l.x2; y=l.sideY+4; scale=l.scale2; rotateY=l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95); }
+        else if (d === 2) { x=l.x2; y=l.sideY+4; scale=l.scale2; rotateY=-l.rot2; z=1; w=Math.round(l.sideW*0.95); h=Math.round(l.sideH*0.95); }
+        else { opacity=0; z=0; x=0; y=0; scale=0.7; rotateY=0; }
         card.style.width = w + 'px';
         card.style.height = h + 'px';
         card.style.opacity = opacity;

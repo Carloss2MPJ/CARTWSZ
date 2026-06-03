@@ -160,18 +160,18 @@
         #arrow-prev { left: 12px; }
         #arrow-next { right: 12px; }
 
-        /* ========== INFORMACIÓN DEL PRODUCTO (debajo del carrusel) ========== */
+        /* ========== INFORMACIÓN DEL PRODUCTO (DEBAJO DEL CARRUSEL) ========== */
         .product-detail {
             position: absolute;
-            top: 50%;
+            top: calc(50% + 32vh); /* justo debajo del carrusel (mitad de 60vh + espacio) */
             left: 50%;
-            transform: translate(-50%, 120px); /* justo debajo de la card activa */
+            transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
             z-index: 150;
-            pointer-events: none; /* permite clics a los botones del carrusel */
+            pointer-events: none;
         }
 
         .product-label {
@@ -305,9 +305,12 @@
             fill: white;
         }
 
+        /* ========== AJUSTES RESPONSIVE ========== */
         @media (max-width: 500px) {
             #custom-logo { height: 133px; }
             .stage-mio { height: 55vh; min-height: 300px; }
+            /* Ajustamos la posición del detalle para que quede debajo del carrusel más pequeño */
+            .product-detail { top: calc(50% + 29vh); }
             .product-label { font-size: 22px; letter-spacing: 1.5px; }
             .old-price { font-size: 15px; }
             .new-price { font-size: 22px; }
@@ -319,6 +322,7 @@
         @media (max-width: 400px) {
             #custom-logo { height: 118px; }
             .stage-mio { height: 50vh; min-height: 280px; }
+            .product-detail { top: calc(50% + 27vh); }
             .product-label { font-size: 18px; letter-spacing: 1px; }
             .old-price { font-size: 13px; }
             .new-price { font-size: 18px; }
@@ -358,7 +362,7 @@
         </div>
     </div>
 
-    <!-- Información del Bate (siempre visible, puedes ocultarla con JS si quieres) -->
+    <!-- Información del Bate (siempre debajo del carrusel) -->
     <div class="product-detail">
         <div class="product-label">Bate</div>
         <div class="price-container">
